@@ -13,9 +13,14 @@ enum RelationshipTypeEnum {
  */
 export interface UserRelationship {
     /**
+     * The ID of the user which this relationship belongs to.
+     */
+    uid: string;
+    
+    /**
      * The ID of the target user.
      */
-    id: string;
+    targetId: string;
 
     /**
      * When this relationship was first introduced.
