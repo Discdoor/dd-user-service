@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { MongoClient, Db } from 'mongodb';
 import { RelationshipManager } from './src/mgmt/relationship-mgr';
 import { api } from "../libdd-node";
+const { sendResponseObject, constructResponseObject } = api;
 
 // Read .env file
 dotenv.config();
@@ -11,9 +12,12 @@ const app: Express = express();
 let relMgr: RelationshipManager;
 
 // Routes
-app.get('/relations/:id/all', (req: Request, res: Response) => {
-    res.contentType('json');
-    res.end(JSON.stringify(relMgr.getAll(req.params.id)));
+app.get('/relations/:id/all', async (req: Request, res: Response) => {
+    try {
+
+    } catch(e: Error | any) {
+        sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
+    }
 });
 
 /**
