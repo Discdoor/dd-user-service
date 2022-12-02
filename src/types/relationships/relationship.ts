@@ -1,7 +1,7 @@
 /**
  * Relationship type.
  */
-enum RelationshipTypeEnum {
+export enum RelationshipTypeEnum {
     friend = 1,
     block = 2,
     incoming = 3,
@@ -23,7 +23,7 @@ export interface UserRelationship {
     targetId: string;
 
     /**
-     * When this relationship was first introduced.
+     * When this relationship was last updated.
      */
     when: Date;
 

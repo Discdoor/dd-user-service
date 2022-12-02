@@ -1,6 +1,8 @@
 # dd-user-service
 DiscDoor user service.
 
+This user service manages keeps client user settings synchronized and manages user relations.
+
 ## Requirements
 - TypeScript
 
