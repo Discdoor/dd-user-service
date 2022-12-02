@@ -27,7 +27,7 @@ app.get('/relations/:id', async (req: Request, res: Response) => {
             id: { type: "string" },
         }, req.params);
 
-        sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.get(req.params.id)));
+        sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.getRelations(req.params.id)));
     } catch(e: Error | any) {
         sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
     }
@@ -45,6 +45,7 @@ app.get('/relations/:id/:filter', async (req: Request, res: Response) => {
         }, req.params);
 
         const validFilterMapping = [
+            { name: "all", value: -1 },
             { name: "block", value: RelationshipTypeEnum.block },
             { name: "friend", value: RelationshipTypeEnum.friend },
             { name: "incoming", value: RelationshipTypeEnum.incoming },
@@ -56,7 +57,7 @@ app.get('/relations/:id/:filter', async (req: Request, res: Response) => {
         if(!fltr)
             throw new Error("Invalid filter.");
 
-        sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.get(req.params.id, fltr.value)));
+        sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.getRelations(req.params.id, fltr.value)));
     } catch(e: Error | any) {
         sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
     }
@@ -76,7 +77,7 @@ app.post('/relations/:id/block', async (req: Request, res: Response) => {
             target: { type: "string" }
         }, req.body);
 
-        await relMgr.block(req.params.id, req.body.target);
+        await relMgr.blockUser(req.params.id, req.body.target);
 
         sendResponseObject(res, 200, constructResponseObject(true, "User has been blocked."));
     } catch(e: Error | any) {
@@ -85,21 +86,54 @@ app.post('/relations/:id/block', async (req: Request, res: Response) => {
 });
 
 /*
-Route to request user. This will place an outgoing request in the source user and an incoming request in the target user.
+Friend request methods.
 */
-app.post('/relations/:id/request', async (req: Request, res: Response) => {
+app.post('/relations/:id/friend/:method', async (req: Request, res: Response) => {
     try {
         validateSchema({
-            id: { type: "string" }
+            id: { type: "string" },
+            method: { type: "string" }
         }, req.params);
 
         validateSchema({
             target: { type: "string" }
         }, req.body);
 
-        //await relMgr.block(req.params.id, req.params.targetUser);
+        switch(req.params.method) {
+            default:
+                throw new Error("Unknown method.");
+            case "request":
+                // Put a friend request
+                await relMgr.sendFriendRequest(req.params.id, req.body.target);
+                break;
+            case "accept":
+                await relMgr.acceptFriendRequest(req.params.id, req.body.target);
+                break;
+            case "deny":
+                await relMgr.denyFriendRequest(req.params.id, req.body.target);
+                break;
+        }
 
-        sendResponseObject(res, 200, constructResponseObject(true, "User has been blocked."));
+        sendResponseObject(res, 200, constructResponseObject(true, ""));
+    } catch(e: Error | any) {
+        sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
+    }
+});
+
+/*
+Friend remove method.
+*/
+app.delete('/relations/:id/friend', async(req: Request, res: Response) => {
+    try {
+        validateSchema({
+            id: { type: "string" },
+        }, req.params);
+
+        validateSchema({
+            target: { type: "string" }
+        }, req.body);
+
+        sendResponseObject(res, 200, constructResponseObject(true, ""));
     } catch(e: Error | any) {
         sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
     }
