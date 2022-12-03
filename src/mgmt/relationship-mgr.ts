@@ -1,6 +1,8 @@
 import { api, schema } from 'libdd-node';
 import { Collection } from 'mongodb';
 import { RelationshipTypeEnum, UserRelationship } from '../types/relationships/relationship';
+import { reflect } from 'libdd-node';
+const { createShallowView } = reflect;
 
 /**
  * A management object for managing user relationships.
@@ -34,7 +36,7 @@ export class RelationshipManager {
         if(!doc)
             throw new Error(`Error finding relationships.`);
 
-        return doc;
+        return doc.map(x => createShallowView(x, []));
     }
 
     /**
