@@ -46,6 +46,7 @@ app.get('/relations/:id/:filter', async (req: Request, res: Response) => {
 
         const validFilterMapping = [
             { name: "all", value: -1 },
+            { name: "pending", value: -2 },
             { name: "block", value: RelationshipTypeEnum.block },
             { name: "friend", value: RelationshipTypeEnum.friend },
             { name: "incoming", value: RelationshipTypeEnum.incoming },
@@ -57,7 +58,14 @@ app.get('/relations/:id/:filter', async (req: Request, res: Response) => {
         if(!fltr)
             throw new Error("Invalid filter.");
 
-        sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.getRelations(req.params.id, fltr.value)));
+        // Custom pending filter
+        if(fltr.value == -2)
+            sendResponseObject(res, 200, constructResponseObject(true, "", [
+                ...await relMgr.getRelations(req.params.id, RelationshipTypeEnum.incoming),
+                ...await relMgr.getRelations(req.params.id, RelationshipTypeEnum.outgoing)
+            ]));
+        else
+            sendResponseObject(res, 200, constructResponseObject(true, "", await relMgr.getRelations(req.params.id, fltr.value)));
     } catch(e: Error | any) {
         sendResponseObject(res, 400, constructResponseObject(false, e.message || ""));
     }
