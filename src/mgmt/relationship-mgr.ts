@@ -44,7 +44,7 @@ export class RelationshipManager {
      * @param uid The ID of the user to check relations for.
      * @param targetId The target user to get the relation for.
      */
-    async getRelation(uid: string, targetId: string) {
+    async getRelation(uid: string, targetId: string): Promise<UserRelationship | null> {
         return await this.col.findOne<UserRelationship>({
             id: uid,
             targetId
@@ -96,7 +96,26 @@ export class RelationshipManager {
         if(uid == targetUserId)
             throw new Error("You cannot block yourself.");
 
+        // Remove friendship
+        await this.removeFriend(uid, targetUserId);
         await this.updateRelation(uid, targetUserId, RelationshipTypeEnum.block);
+
+        return true;
+    }
+
+    /**
+     * Unblocks the specified user.
+     * @param uid The user to unblock a user for.
+     * @param targetUserId The user to unblock.
+     */
+    async unblockUser(uid: string, targetUserId: string) {
+        if(uid == targetUserId)
+            throw new Error("You cannot unblock yourself.");
+
+        // Remove block relation
+        await this.removeRelation(uid, targetUserId);
+
+        return true;
     }
 
     /**
@@ -173,8 +192,9 @@ export class RelationshipManager {
         if(!incomingRel)
             return true; // Nothing to do.
 
-        // Deny the request - remove relation for target user only. Source user should have no idea.
-        await this.updateRelation(targetUserId, uid, RelationshipTypeEnum.incoming);
+        // Deny the request - remove incoming relation from user but keep outgoing one
+        await this.removeRelation(uid, targetUserId);
+        return true;
     }
 
     /**
@@ -191,7 +211,7 @@ export class RelationshipManager {
 
         // Remove relation
         await this.removeRelation(uid, targetUserId);
-        await this.removeFriend(targetUserId, uid);
+        await this.removeRelation(targetUserId, uid);
         return true;
     }
 }
