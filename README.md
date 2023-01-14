@@ -7,6 +7,7 @@ This user service manages keeps client user settings synchronized and manages us
 - NodeJS
 - TypeScript
 - MongoDB
+- Docker (if you wish to dockerize)
 
 ## Installing dependencies
 To install all project dependencies, run `npm install` inside the project folder.
