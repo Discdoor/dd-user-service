@@ -26,9 +26,11 @@ To run this for production locally, run the following commands.
 - `npm run start`
 
 ### Production (dockerized, preferred)
-Simply create a container from the Dockerfile included here.
+Simply create an image from the Dockerfile included here.
 
 To do this, run `docker build -t dd-user-service .` in the repository root.
+
+Then you can create a container based on this image.
 
 ## Testing
 To run the unit tests for this project, run `npm test`. A successful pass is required before making any commits to this project.
