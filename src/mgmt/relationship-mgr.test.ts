@@ -32,6 +32,7 @@ describe('Relationship manager', () => {
         
         let db: Db = await connection.db('discdoor');
         let col: Collection = db.collection('relationships');
+        await col.drop(); // Ensure collection is empty
         relMgr = new RelationshipManager(col);
     });
 
