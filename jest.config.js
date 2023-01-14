@@ -5,6 +5,6 @@ const mongoPreset = require('@shelf/jest-mongodb/jest-preset');
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = merge.recursive(tsPreset, mongoPreset, {
     globals: {
-        testEnvironment: 'node'
+        testEnvironment: 'node',   
     }
 });
