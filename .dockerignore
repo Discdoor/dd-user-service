@@ -4,3 +4,4 @@ docs
 *.md
 *.example
 .env
+.github

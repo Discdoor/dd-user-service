@@ -1,0 +1,49 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup SSH Keys and known_hosts
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        mkdir ~/.ssh
+        echo "${{ secrets.SSH_PUB_KEY }}" > ~/.ssh/id_rsa.pub
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa.pub
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        # The action defaults to search for the dependency file
+        # (package-lock.json or yarn.lock) in the repository root, and uses
+        # its hash as a part of the cache key.
+        # https://github.com/actions/setup-node#caching-packages-dependencies
+        cache-dependency-path: "**/package-lock.json"
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
