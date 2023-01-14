@@ -1,7 +1,7 @@
 # Use NODEJS
 FROM node:16
 
-# Create app directory
+# Setup image
 WORKDIR /usr/src/usersvc
 COPY package*.json ./
 COPY . ./
