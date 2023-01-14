@@ -155,7 +155,7 @@ async function main() {
     let mclient = new MongoClient(process.env.DB_URL as string);
     
     try {
-        console.log("Connecting to database...");
+        console.log(`Connecting to database at ${process.env.DB_URL}...`);
         await mclient.connect();
         console.log("Database connection successful!");
     } catch(e) {
