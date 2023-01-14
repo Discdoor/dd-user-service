@@ -6,18 +6,29 @@ This user service manages keeps client user settings synchronized and manages us
 ## Requirements
 - NodeJS
 - TypeScript
+- MongoDB
 
-## How to run (development)
+## Installing dependencies
+To install all project dependencies, run `npm install` inside the project folder.
+
+You may need to install TypeScript. To do so, run `npm install -g typescript`. Then, check if `tsc` is recognized as a valid system command. If this command succeeds, TypeScript is successfully installed.
+
+## Running
+Below are instructions to help you run `dd-user-service`.
+
+### Development
 To run a development server, execute the following commands.
 - `npm run dev`
 
-## How to run (production, local)
-To create run this for production locally, run the following commands.
+### Production (local)
+To run this for production locally, run the following commands.
 - `npm run build`
 - `npm run start`
 
-## How to run (docker)
+### Production (dockerized, preferred)
 Simply create a container from the Dockerfile included here.
+
+To do this, run `docker build -t dd-user-service .` in the repository root.
 
 ## Testing
 To run the unit tests for this project, run `npm test`. A successful pass is required before making any commits to this project.
