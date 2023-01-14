@@ -9,3 +9,4 @@ User relationships are relationships such as friendships, blocked users, incomin
 ## Further Reading
  - [Relationships](./relationships.md)
  - [API Endpoints](./endpoints.md)
+ - [Client Settings](./client-settings.md)
