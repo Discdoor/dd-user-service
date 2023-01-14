@@ -6,6 +6,7 @@ WORKDIR /usr/src/usersvc
 COPY package*.json ./
 RUN npm install
 RUN npm install -g typescript
+RUN npm run build
 COPY . .
 EXPOSE ${PORT}
 CMD [ "npm", "run", "start" ]
