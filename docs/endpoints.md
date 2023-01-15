@@ -97,7 +97,7 @@ Friend request handling method.
 
 Parameters:
  - `:id:` - The ID of the user.
- - `:method:` - The action to take (`accept`, `deny`, or `request`)
+ - `:method:` - The action to take (`accept`, `deny`, `request`, or `retract`)
 
 Body Parameters:
  - `target` - The target ID of the user to take action on.

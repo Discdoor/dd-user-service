@@ -120,6 +120,16 @@ app.post('/relations/:id/friend/:method', async (req: Request, res: Response) =>
             case "deny":
                 await relMgr.denyFriendRequest(req.params.id, req.body.target);
                 break;
+            case "retract":
+                // Only do this if there is an outgoing request
+                if((await relMgr.getRelation(req.params.id, req.body.target))?.type == RelationshipTypeEnum.outgoing) {
+                    await relMgr.removeRelation(req.params.id, req.body.target);
+                    await relMgr.removeRelation(req.body.target, req.params.id);
+                }
+                else
+                    throw new Error("Acting user does not have outgoing relationship with target user.")
+                
+                break;
         }
 
         sendResponseObject(res, 200, constructResponseObject(true, ""));
@@ -131,15 +141,14 @@ app.post('/relations/:id/friend/:method', async (req: Request, res: Response) =>
 /*
 Friend remove method.
 */
-app.delete('/relations/:id/friend', async(req: Request, res: Response) => {
+app.delete('/relations/:id/friend/remove/:target', async(req: Request, res: Response) => {
     try {
         validateSchema({
             id: { type: "string" },
+            target: { type: "string" }
         }, req.params);
 
-        validateSchema({
-            target: { type: "string" }
-        }, req.body);
+        await relMgr.removeFriend(req.params.id, req.params.target);
 
         sendResponseObject(res, 200, constructResponseObject(true, ""));
     } catch(e: Error | any) {
