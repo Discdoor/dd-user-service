@@ -128,14 +128,12 @@ Example Response:
 
 -----
 
-## `DELETE` /relations/`:id:`/friend
+## `DELETE` /relations/`:id:`/friend/remove/`:target:`
 Removes the specified friend.
 
 Parameters:
  - `:id:` - The ID of the user.
-
-Body Parameters:
- - `target` - The target ID of the user to take action on.
+- `target` - The target ID of the user to take action on.
 
 Results:
  - `200` - If the request was successful
@@ -143,14 +141,7 @@ Results:
 
 Example Request:
 
-Request: `DELETE /relations/501023025195198/friend`
-
-Body:
-```json
-{
-    "target": "1237582395723"
-}
-```
+Request: `DELETE /relations/501023025195198/friend/remove/1237582395723`
 
 Example Response:
 ```json
